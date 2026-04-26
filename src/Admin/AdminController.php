@@ -449,9 +449,14 @@ final class AdminController extends Controller
 
     private function ensureOrdersPhoneColumn(Connection $db): void
     {
-        $hasPhoneCol = (bool)$db->pdo()->query("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'orders' AND COLUMN_NAME = 'shipping_phone'")->fetchColumn();
-        if (!$hasPhoneCol) {
-            $db->pdo()->exec("ALTER TABLE orders ADD COLUMN shipping_phone VARCHAR(40) NULL AFTER shipping_email");
+        try {
+            $hasPhoneCol = (bool)$db->pdo()->query("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'orders' AND COLUMN_NAME = 'shipping_phone'")->fetchColumn();
+            if (!$hasPhoneCol) {
+                $db->pdo()->exec("ALTER TABLE orders ADD COLUMN shipping_phone VARCHAR(40) NULL AFTER shipping_email");
+            }
+        } catch (\PDOException $e) {
+            // Log schema migration errors (disk full, permission issues, etc.) but don't block page load
+            error_log("Warning: Could not ensure orders.shipping_phone column exists: " . $e->getMessage());
         }
     }
 }

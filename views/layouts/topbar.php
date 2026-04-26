@@ -124,10 +124,37 @@ $faviconUrl = (string)($appSettings['favicon_url'] ?? '');
             font-weight: 700;
             text-transform: uppercase;
         }
+
+        /* Hero Slideshow Styles */
+        .hero-slideshow {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .hero-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .fade {
+            animation: none;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900">
-<header class="sticky top-0 z-50 border-b border-slate-200/90 bg-white/95 backdrop-blur">
+<header class="sticky top-0 z-50 border-b border-slate-200/90 bg-white shadow-md">
     <div class="bg-slate-900 text-slate-100 text-sm py-2 text-center"><?= htmlspecialchars($heroBadgeText, ENT_QUOTES, 'UTF-8') ?></div>
     <div class="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between gap-3">
         <a href="<?= $basePath ?? '' ?>/" class="text-2xl font-bold tracking-wide text-slate-900 flex items-center gap-2">

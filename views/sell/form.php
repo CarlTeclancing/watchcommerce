@@ -1,11 +1,21 @@
 <?php $title = 'Sell Your Watch'; include __DIR__ . '/../layouts/topbar.php'; ?>
 
-<!-- Hero Banner -->
-<div class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-20 text-white">
-    <div class="pointer-events-none absolute inset-0 opacity-10"
-         style="background-image: url('https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=1400&q=80'); background-size: cover; background-position: center;"></div>
-    <div class="absolute inset-0 bg-gradient-to-br from-slate-900/80 to-slate-900/60"></div>
-    <div class="relative mx-auto max-w-3xl px-6 text-center">
+<!-- Hero Banner with Image Slideshow -->
+<div class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-20 text-white h-80">
+    <!-- Image Slideshow -->
+    <div class="hero-slideshow absolute inset-0">
+        <div class="hero-slide fade" style="background-image: url('https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=1400&q=80'); background-size: cover; background-position: center;"></div>
+        <div class="hero-slide fade" style="background-image: url('https://images.unsplash.com/photo-1617634924702-92f37138b7c2?w=1400&q=80'); background-size: cover; background-position: center;"></div>
+        <div class="hero-slide fade" style="background-image: url('https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=1400&q=80'); background-size: cover; background-position: center;"></div>
+        <div class="hero-slide fade" style="background-image: url('https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=1400&q=80'); background-size: cover; background-position: center;"></div>
+        <div class="hero-slide fade" style="background-image: url('https://images.unsplash.com/photo-1578127282290-831bfc70f9f5?w=1400&q=80'); background-size: cover; background-position: center;"></div>
+    </div>
+    
+    <!-- Dark Overlay for Text Readability -->
+    <div class="absolute inset-0 bg-gradient-to-br from-slate-900/85 to-slate-900/75"></div>
+    
+    <!-- Content -->
+    <div class="relative mx-auto max-w-3xl px-6 text-center h-full flex flex-col justify-center">
         <span class="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-4 py-1.5 text-sm font-semibold text-amber-300">
             <i class="fas fa-shield-alt text-xs"></i> Trusted Valuation Service
         </span>
@@ -186,5 +196,34 @@
 
     </div>
 </div>
+
+<script>
+    // Hero Slideshow rotation
+    function initHeroSlideshow() {
+        const slides = document.querySelectorAll('.hero-slide');
+        if (slides.length === 0) return;
+        
+        let currentSlide = 0;
+        slides[currentSlide].classList.add('active');
+        
+        setInterval(() => {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }, 5000); // Change slide every 5 seconds
+    }
+
+    // Initialize on DOM ready
+    document.addEventListener('DOMContentLoaded', () => {
+        initHeroSlideshow();
+    });
+
+    // Also initialize if already loaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initHeroSlideshow);
+    } else {
+        initHeroSlideshow();
+    }
+</script>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

@@ -17,8 +17,31 @@ final class ApiController extends Controller
     {
         /** @var Connection $db */
         $db = $this->container->get(Connection::class);
-        $items = $db->pdo()->query('SELECT id, slug, title, reference_number, list_price FROM watches WHERE status = "published" LIMIT 100')->fetchAll(PDO::FETCH_ASSOC);
-        return $this->json(['data' => $items]);
+        
+        // Get pagination parameters from query string
+        $page = (int)($request->query['page'] ?? 1);
+        $perPage = (int)($request->query['per_page'] ?? 10);
+        
+        // Ensure valid pagination values
+        $page = max(1, $page);
+        $perPage = max(1, min($perPage, 100)); // Max 100 per page
+        
+        $offset = ($page - 1) * $perPage;
+        
+        // Fetch paginated watches with all necessary fields
+        $statement = $db->pdo()->prepare(
+            'SELECT id, slug, title, brand_slug, reference_number, condition_grade, year_of_production, list_price, hero_image_url 
+             FROM watches 
+             WHERE status = "published" 
+             ORDER BY created_at DESC 
+             LIMIT :limit OFFSET :offset'
+        );
+        $statement->bindValue(':limit', $perPage, PDO::PARAM_INT);
+        $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $statement->execute();
+        $items = $statement->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $this->json(['watches' => $items]);
     }
 
     public function watch(Request $request, array $params): Response

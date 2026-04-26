@@ -1,7 +1,20 @@
 <?php $title = 'Luxury Watch Commerce - Authenticated Timepieces'; include __DIR__ . '/../layouts/topbar.php'; ?>
 
-<section class="luxury-dark text-white py-16 px-4">
-    <div class="max-w-7xl mx-auto text-center">
+<section class="luxury-dark text-white py-16 px-4 relative overflow-hidden h-80 flex items-center justify-center">
+    <!-- Image Slideshow -->
+    <div class="hero-slideshow absolute inset-0">
+        <div class="hero-slide fade" style="background-image: url('https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=1400&q=80'); background-size: cover; background-position: center;"></div>
+        <div class="hero-slide fade" style="background-image: url('https://images.unsplash.com/photo-1617634924702-92f37138b7c2?w=1400&q=80'); background-size: cover; background-position: center;"></div>
+        <div class="hero-slide fade" style="background-image: url('https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=1400&q=80'); background-size: cover; background-position: center;"></div>
+        <div class="hero-slide fade" style="background-image: url('https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=1400&q=80'); background-size: cover; background-position: center;"></div>
+        <div class="hero-slide fade" style="background-image: url('https://images.unsplash.com/photo-1578127282290-831bfc70f9f5?w=1400&q=80'); background-size: cover; background-position: center;"></div>
+    </div>
+    
+    <!-- Dark Overlay for Text Readability -->
+    <div class="absolute inset-0 bg-gradient-to-br from-slate-900/85 via-slate-900/80 to-slate-900/75"></div>
+    
+    <!-- Content -->
+    <div class="relative max-w-7xl mx-auto text-center z-10">
         <h1 class="text-4xl md:text-5xl font-bold mb-4 section-title">Exquisite Timepieces</h1>
         <p class="text-lg md:text-xl text-slate-300 mb-8 max-w-3xl mx-auto">Discover curated collections of authenticated luxury watches from the world's most prestigious brands.</p>
         <div class="flex justify-center gap-4 flex-wrap">
@@ -71,6 +84,99 @@
 </section>
 <?php endif; ?>
 
+<!-- All Watches - 2 Column Grid with Infinite Scroll -->
+<section class="py-16 px-4 bg-white">
+    <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl font-bold mb-12 text-center section-title">Complete Collection</h2>
+        <div id="watches-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <!-- Watches will be loaded here -->
+        </div>
+        <div class="flex justify-center">
+            <button id="load-more-btn" class="btn-primary px-8 py-3">
+                <i class="fas fa-sync-alt"></i> Load More Watches
+            </button>
+        </div>
+    </div>
+</section>
+
+<script>
+    let currentPage = 1;
+    let isLoading = false;
+
+    function loadWatches(page = 1) {
+        if (isLoading) return;
+        isLoading = true;
+        
+        const btn = document.getElementById('load-more-btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+        btn.disabled = true;
+
+        fetch('<?= $basePath ?? '' ?>/api/v1/watches?page=' + page + '&per_page=4')
+            .then(res => res.json())
+            .then(data => {
+                if (data.watches && data.watches.length > 0) {
+                    const grid = document.getElementById('watches-grid');
+                    
+                    data.watches.forEach(watch => {
+                        const watchCard = document.createElement('a');
+                        watchCard.href = '<?= $basePath ?? '' ?>/watches/' + watch.slug;
+                        watchCard.className = 'block luxury-card surface-card overflow-hidden flex flex-col hover:shadow-lg transition-all';
+                        
+                        const imageUrl = watch.hero_image_url || 'https://placehold.co/500x500';
+                        const price = new Intl.NumberFormat('en-US').format(watch.list_price);
+                        const year = watch.year_of_production ? '<p class="text-xs text-slate-500 mt-1"><i class="fas fa-calendar"></i> ' + watch.year_of_production + '</p>' : '';
+                        
+                        watchCard.innerHTML = `
+                            <div class="relative bg-slate-200 h-64 overflow-hidden">
+                                <img class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="${imageUrl}" alt="${watch.title}">
+                            </div>
+                            <div class="p-4 flex-1 flex flex-col">
+                                <p class="text-xs uppercase tracking-wider text-slate-500 luxury-gold font-semibold">${watch.brand_slug || 'Unknown'}</p>
+                                <h3 class="font-semibold text-lg mt-2">${watch.title}</h3>
+                                <p class="text-sm text-slate-600 mt-1">Ref ${watch.reference_number}</p>
+                                ${year}
+                                <div class="mt-4 pt-4 border-t flex justify-between items-center">
+                                    <span class="text-lg font-bold">$${price}</span>
+                                    <span class="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded">${watch.condition_grade}</span>
+                                </div>
+                            </div>
+                        `;
+                        
+                        grid.appendChild(watchCard);
+                    });
+                    
+                    currentPage++;
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    isLoading = false;
+                    
+                    if (data.watches.length < 4) {
+                        btn.style.display = 'none';
+                    }
+                } else {
+                    btn.style.display = 'none';
+                }
+            })
+            .catch(err => {
+                console.error('Error loading watches:', err);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                isLoading = false;
+            });
+    }
+
+    // Load initial batch on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        loadWatches(1);
+    });
+
+    // Load more on button click
+    document.getElementById('load-more-btn').addEventListener('click', () => {
+        loadWatches(currentPage);
+    });
+</script>
+
 <section class="py-16 px-4 bg-white">
     <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl font-bold mb-12 text-center section-title">Why Choose Us</h2>
@@ -130,6 +236,33 @@
                 1024: { slidesPerView: 3 },
             }
         });
+    }
+
+    // Hero Slideshow rotation
+    function initHeroSlideshow() {
+        const slides = document.querySelectorAll('.hero-slide');
+        if (slides.length === 0) return;
+        
+        let currentSlide = 0;
+        slides[currentSlide].classList.add('active');
+        
+        setInterval(() => {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }, 5000); // Change slide every 5 seconds
+    }
+
+    // Initialize on DOM ready
+    document.addEventListener('DOMContentLoaded', () => {
+        initHeroSlideshow();
+    });
+
+    // Also initialize if already loaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initHeroSlideshow);
+    } else {
+        initHeroSlideshow();
     }
 </script>
 

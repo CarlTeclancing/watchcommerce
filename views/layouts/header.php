@@ -35,7 +35,7 @@ $faviconUrl = (string)($appSettings['favicon_url'] ?? '');
         .luxury-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
         .trust-badge { background-color: #1e293b; color: #e2e8f0; padding: 0.5rem 1rem; font-size: 0.875rem; text-align: center; border-bottom: 1px solid #334155; }
         .header-top { background-color: #0f172a; color: #e2e8f0; padding: 1rem; display: flex; align-items: center; justify-content: space-between; }
-        .header-main { background-color: white; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .header-main { background-color: white; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         .header-logo { font-size: 2rem; font-weight: bold; letter-spacing: 3px; color: #0f172a; text-decoration: none; }
         .nav-link { color: #0f172a; text-decoration: none; font-size: 0.95rem; transition: color 0.2s; }
         .nav-link:hover { color: #d4af37; }
