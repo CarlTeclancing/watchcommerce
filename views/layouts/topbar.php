@@ -125,31 +125,22 @@ $faviconUrl = (string)($appSettings['favicon_url'] ?? '');
             text-transform: uppercase;
         }
 
-        /* Hero Slideshow Styles */
-        .hero-slideshow {
+        .hero-swiper,
+        .hero-swiper .swiper-wrapper,
+        .hero-swiper .swiper-slide {
             width: 100%;
             height: 100%;
-            position: relative;
         }
 
-        .hero-slide {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            transition: opacity 1.2s ease-in-out;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .hero-slide.active {
+        .hero-pagination .swiper-pagination-bullet {
+            width: 0.75rem;
+            height: 0.75rem;
+            background: rgba(255, 255, 255, 0.55);
             opacity: 1;
         }
 
-        .fade {
-            animation: none;
+        .hero-pagination .swiper-pagination-bullet-active {
+            background: var(--luxury-gold);
         }
     </style>
 </head>
