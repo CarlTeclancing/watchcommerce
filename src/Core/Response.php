@@ -20,8 +20,15 @@ final class Response
     public static function getBasePath(): string
     {
         if (self::$basePath === null) {
-            $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
-            self::$basePath = rtrim(dirname($scriptName), '/');
+            // Prefer APP_URL so /public never leaks into redirect URLs
+            $appUrl = $_ENV['APP_URL'] ?? '';
+            if ($appUrl) {
+                $path = parse_url($appUrl, PHP_URL_PATH) ?? '';
+                self::$basePath = rtrim($path, '/');
+            } else {
+                $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+                self::$basePath = rtrim(dirname($scriptName), '/');
+            }
         }
         return self::$basePath;
     }

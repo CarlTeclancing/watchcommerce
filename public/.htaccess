@@ -1,6 +1,6 @@
 Options -Indexes
 RewriteEngine On
-RewriteBase /watch-commerce/public/
+RewriteBase /
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

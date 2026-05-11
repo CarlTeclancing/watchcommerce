@@ -20,8 +20,14 @@ final class Request
     {
         $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 
-        // Strip base path if application is in a subdirectory
-        $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
+        // Strip base path if application is in a subdirectory.
+        // Use APP_URL when available so /public never leaks into the path.
+        $appUrl = $_ENV['APP_URL'] ?? '';
+        if ($appUrl) {
+            $basePath = rtrim(parse_url($appUrl, PHP_URL_PATH) ?? '', '/');
+        } else {
+            $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
+        }
         if ($basePath && strpos($path, $basePath) === 0) {
             $path = substr($path, strlen($basePath));
         }
