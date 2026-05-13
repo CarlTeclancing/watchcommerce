@@ -152,14 +152,61 @@ $gallery = array_values($gallery);
         </div>
     </div>
 
+    <!-- About This Watch -->
     <?php if (!empty($watch['description_html'])): ?>
-    <div class="surface-card p-8 rounded-2xl">
+    <div class="surface-card p-8 rounded-2xl mb-6">
         <h2 class="text-2xl font-bold text-slate-900 mb-4">About This Watch</h2>
         <div class="prose max-w-none text-slate-700">
             <?= $watch['description_html'] ?>
         </div>
     </div>
     <?php endif; ?>
+
+    <!-- ============================================================
+         SPECIFICATIONS TABLE (inspired by bobswatches.com)
+         ============================================================ -->
+    <div class="surface-card p-8 rounded-2xl">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">
+            <i class="fas fa-list-alt text-amber-500 mr-2"></i> Specifications
+        </h2>
+        <table class="w-full text-sm border-collapse">
+            <tbody>
+                <?php
+                $specs = [
+                    'Brand'          => ucfirst(str_replace('-', ' ', $watch['brand_slug'] ?? '')),
+                    'Model / Title'  => $watch['title'] ?? null,
+                    'Reference No.'  => $watch['reference_number'] ?? null,
+                    'Serial No.'     => $watch['serial_number'] ?? null,
+                    'Year'           => $watch['year_of_production'] ?? null,
+                    'Condition'      => ucfirst(str_replace('_', ' ', $watch['condition_grade'] ?? '')),
+                    'Case Material'  => $watch['case_material'] ?? null,
+                    'Dial Color'     => $watch['dial_color'] ?? null,
+                    'Movement'       => $watch['movement'] ?? null,
+                    'Bracelet'       => $watch['bracelet'] ?? null,
+                    'Power Reserve'  => $watch['power_reserve'] ?? null,
+                    'Box & Papers'   => isset($watch['includes_box_papers'])
+                                        ? ($watch['includes_box_papers'] ? '✅ Included' : '❌ Not Included')
+                                        : null,
+                ];
+                $row = 0;
+                foreach ($specs as $label => $value):
+                    if ($value === null || $value === '') continue;
+                    $bg = $row % 2 === 0 ? 'background-color:#f8fafc;' : 'background-color:#ffffff;';
+                    $row++;
+                ?>
+                <tr style="<?= $bg ?> border-bottom:1px solid #e2e8f0;">
+                    <td style="padding:14px 20px; font-weight:600; color:#475569; width:35%;">
+                        <?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>
+                    </td>
+                    <td style="padding:14px 20px; color:#0f172a;">
+                        <?= htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8') ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
 <script>
