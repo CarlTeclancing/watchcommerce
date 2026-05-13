@@ -60,6 +60,12 @@
                                             data-year="<?= htmlspecialchars((string)($item['year_of_production'] ?? ''), ENT_QUOTES) ?>"
                                             data-price="<?= htmlspecialchars((string)($item['list_price'] ?? ''), ENT_QUOTES) ?>"
                                             data-status="<?= htmlspecialchars($item['status'] ?? 'draft', ENT_QUOTES) ?>"
+                                            data-case-material="<?= htmlspecialchars($item['case_material'] ?? '', ENT_QUOTES) ?>"
+                                            data-dial-color="<?= htmlspecialchars($item['dial_color'] ?? '', ENT_QUOTES) ?>"
+                                            data-movement="<?= htmlspecialchars($item['movement'] ?? '', ENT_QUOTES) ?>"
+                                            data-bracelet="<?= htmlspecialchars($item['bracelet'] ?? '', ENT_QUOTES) ?>"
+                                            data-power-reserve="<?= htmlspecialchars($item['power_reserve'] ?? '', ENT_QUOTES) ?>"
+                                            data-box-papers="<?= (int)($item['includes_box_papers'] ?? 0) ?>"
                                             onclick="openEditWatchModal(this)">
                                         <i class="fas fa-pen"></i> Edit
                                     </button>
@@ -125,51 +131,38 @@
                   enctype="multipart/form-data" class="space-y-5">
                 <input type="hidden" name="_token" value="<?= htmlspecialchars($csrf_token ?? '', ENT_QUOTES, 'UTF-8') ?>">
 
-                <!-- Row 1 -->
+                <!-- Title & Brand -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                            Title <span class="text-red-500">*</span>
-                        </label>
-                        <input class="form-control" name="title"
-                               placeholder="e.g. Rolex Submariner 126610LN" required>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Title <span class="text-red-500">*</span></label>
+                        <input class="form-control" name="title" placeholder="e.g. Rolex Submariner 126610LN" required>
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                            Brand <span class="text-red-500">*</span>
-                            <span class="font-normal text-slate-400">(slug format)</span>
-                        </label>
-                        <input class="form-control" name="brand_slug"
-                               placeholder="e.g. rolex, patek-philippe" required>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Brand <span class="text-red-500">*</span> <span class="font-normal text-slate-400">(slug)</span></label>
+                        <input class="form-control" name="brand_slug" placeholder="e.g. rolex, patek-philippe" required>
                     </div>
                 </div>
 
-                <!-- Row 2 -->
+                <!-- Reference & Price -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Reference Number</label>
-                        <input class="form-control" name="reference_number"
-                               placeholder="e.g. 126610LN">
+                        <input class="form-control" name="reference_number" placeholder="e.g. 126610LN">
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                            List Price (USD) <span class="text-red-500">*</span>
-                        </label>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">List Price (USD) <span class="text-red-500">*</span></label>
                         <div class="relative">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 font-semibold text-sm">$</span>
-                            <input class="form-control pl-7" name="list_price"
-                                   type="number" step="0.01" min="0"
-                                   placeholder="0.00" required>
+                            <input class="form-control pl-7" name="list_price" type="number" step="0.01" min="0" placeholder="0.00" required>
                         </div>
                     </div>
                 </div>
 
-                <!-- Row 3 -->
+                <!-- Year, Condition, Status -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Year of Production</label>
-                        <input class="form-control" name="year_of_production"
-                               type="number" min="1900" max="2099" placeholder="e.g. 2022">
+                        <input class="form-control" name="year_of_production" type="number" min="1900" max="2099" placeholder="e.g. 2022">
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Condition Grade</label>
@@ -193,12 +186,55 @@
                     </div>
                 </div>
 
-                <!-- Row 4 — Hero image upload -->
+                <!-- Case Material & Dial Color -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5"><i class="fas fa-gem text-amber-500 mr-1"></i> Case Material</label>
+                        <input class="form-control" name="case_material" placeholder="e.g. Stainless Steel, Gold">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5"><i class="fas fa-palette text-amber-500 mr-1"></i> Dial Color</label>
+                        <input class="form-control" name="dial_color" placeholder="e.g. Black, Blue, White">
+                    </div>
+                </div>
+
+                <!-- Movement & Bracelet -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5"><i class="fas fa-cog text-amber-500 mr-1"></i> Movement</label>
+                        <input class="form-control" name="movement" placeholder="e.g. Automatic, Manual, Quartz">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5"><i class="fas fa-link text-amber-500 mr-1"></i> Bracelet / Strap</label>
+                        <input class="form-control" name="bracelet" placeholder="e.g. Oyster, Jubilee, Leather">
+                    </div>
+                </div>
+
+                <!-- Power Reserve & Box/Papers -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5"><i class="fas fa-battery-three-quarters text-amber-500 mr-1"></i> Power Reserve</label>
+                        <input class="form-control" name="power_reserve" placeholder="e.g. 70 hours">
+                    </div>
+                    <div class="flex items-center gap-3 mt-6">
+                        <input type="checkbox" name="includes_box_papers" value="1" id="add_box_papers"
+                               class="w-5 h-5 rounded border-slate-300 text-amber-500 cursor-pointer">
+                        <label for="add_box_papers" class="text-sm font-semibold text-slate-700 cursor-pointer">
+                            <i class="fas fa-box text-amber-500 mr-1"></i> Includes Box &amp; Papers
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Description -->
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                        <i class="fas fa-image text-amber-500 mr-1"></i>
-                        Hero / Cover Image
-                    </label>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5"><i class="fas fa-align-left text-amber-500 mr-1"></i> Description</label>
+                    <textarea class="form-control" name="description_html" rows="3"
+                              placeholder="Write a short description about this watch..."></textarea>
+                </div>
+
+                <!-- Hero image -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5"><i class="fas fa-image text-amber-500 mr-1"></i> Hero / Cover Image</label>
                     <div id="heroDropzone"
                          class="relative flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-6 cursor-pointer hover:border-amber-400 hover:bg-amber-50 transition"
                          onclick="document.getElementById('heroFileInput').click()">
@@ -207,18 +243,12 @@
                         <span class="text-xs text-slate-400">JPG, PNG, WEBP — max 5 MB</span>
                         <img id="heroPreview" src="" alt="" class="hidden mt-2 h-32 w-full object-cover rounded-lg">
                     </div>
-                    <input id="heroFileInput" type="file" name="hero_image" accept="image/*"
-                           class="hidden"
-                           onchange="previewHero(this)">
+                    <input id="heroFileInput" type="file" name="hero_image" accept="image/*" class="hidden" onchange="previewHero(this)">
                 </div>
 
-                <!-- Row 5 — Gallery upload -->
+                <!-- Gallery -->
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                        <i class="fas fa-images text-amber-500 mr-1"></i>
-                        Gallery Images
-                        <span class="font-normal text-slate-400">(select multiple)</span>
-                    </label>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5"><i class="fas fa-images text-amber-500 mr-1"></i> Gallery Images <span class="font-normal text-slate-400">(select multiple)</span></label>
                     <div id="galleryDropzone"
                          class="relative flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-6 cursor-pointer hover:border-amber-400 hover:bg-amber-50 transition"
                          onclick="document.getElementById('galleryFileInput').click()">
@@ -227,20 +257,16 @@
                         <span class="text-xs text-slate-400">JPG, PNG, WEBP — up to 10 images</span>
                     </div>
                     <div id="galleryPreviews" class="mt-3 grid grid-cols-4 gap-2 hidden"></div>
-                    <input id="galleryFileInput" type="file" name="gallery_images[]" accept="image/*"
-                           multiple class="hidden"
-                           onchange="previewGallery(this)">
+                    <input id="galleryFileInput" type="file" name="gallery_images[]" accept="image/*" multiple class="hidden" onchange="previewGallery(this)">
                 </div>
 
                 <!-- Actions -->
                 <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-100">
-                    <button type="button"
-                            onclick="document.getElementById('addWatchModal').classList.add('hidden')"
+                    <button type="button" onclick="document.getElementById('addWatchModal').classList.add('hidden')"
                             class="btn-secondary inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-lg">
                         <i class="fas fa-times"></i> Cancel
                     </button>
-                    <button type="submit"
-                            class="btn-primary inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold">
+                    <button type="submit" class="btn-primary inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold">
                         <i class="fas fa-plus"></i> Add Watch to Inventory
                     </button>
                 </div>
@@ -275,6 +301,7 @@
                 <input type="hidden" name="_token" value="<?= htmlspecialchars($csrf_token ?? '', ENT_QUOTES, 'UTF-8') ?>">
                 <input type="hidden" name="watch_id" id="edit_watch_id">
 
+                <!-- Title & Brand -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Title</label>
@@ -284,6 +311,10 @@
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Brand Slug</label>
                         <input class="form-control" id="edit_brand_slug" name="brand_slug" required>
                     </div>
+                </div>
+
+                <!-- Reference & Price -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Reference Number</label>
                         <input class="form-control" id="edit_reference_number" name="reference_number">
@@ -292,6 +323,10 @@
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">List Price (USD)</label>
                         <input class="form-control" id="edit_list_price" name="list_price" type="number" min="0" step="0.01" required>
                     </div>
+                </div>
+
+                <!-- Year, Condition, Status -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Year of Production</label>
                         <input class="form-control" id="edit_year_of_production" name="year_of_production" type="number" min="1900" max="2099">
@@ -306,7 +341,7 @@
                             <option value="fair">Fair</option>
                         </select>
                     </div>
-                    <div class="md:col-span-2">
+                    <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Status</label>
                         <select class="form-control" id="edit_status" name="status">
                             <option value="draft">Draft</option>
@@ -318,9 +353,48 @@
                     </div>
                 </div>
 
+                <!-- Case Material & Dial Color -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5"><i class="fas fa-gem text-amber-500 mr-1"></i> Case Material</label>
+                        <input class="form-control" id="edit_case_material" name="case_material" placeholder="e.g. Stainless Steel, Gold">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5"><i class="fas fa-palette text-amber-500 mr-1"></i> Dial Color</label>
+                        <input class="form-control" id="edit_dial_color" name="dial_color" placeholder="e.g. Black, Blue, White">
+                    </div>
+                </div>
+
+                <!-- Movement & Bracelet -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5"><i class="fas fa-cog text-amber-500 mr-1"></i> Movement</label>
+                        <input class="form-control" id="edit_movement" name="movement" placeholder="e.g. Automatic, Manual, Quartz">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5"><i class="fas fa-link text-amber-500 mr-1"></i> Bracelet / Strap</label>
+                        <input class="form-control" id="edit_bracelet" name="bracelet" placeholder="e.g. Oyster, Jubilee, Leather">
+                    </div>
+                </div>
+
+                <!-- Power Reserve & Box/Papers -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5"><i class="fas fa-battery-three-quarters text-amber-500 mr-1"></i> Power Reserve</label>
+                        <input class="form-control" id="edit_power_reserve" name="power_reserve" placeholder="e.g. 70 hours">
+                    </div>
+                    <div class="flex items-center gap-3 mt-6">
+                        <input type="checkbox" name="includes_box_papers" value="1" id="edit_box_papers"
+                               class="w-5 h-5 rounded border-slate-300 text-amber-500 cursor-pointer">
+                        <label for="edit_box_papers" class="text-sm font-semibold text-slate-700 cursor-pointer">
+                            <i class="fas fa-box text-amber-500 mr-1"></i> Includes Box &amp; Papers
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Actions -->
                 <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-100">
-                    <button type="button"
-                            onclick="document.getElementById('editWatchModal').classList.add('hidden')"
+                    <button type="button" onclick="document.getElementById('editWatchModal').classList.add('hidden')"
                             class="btn-secondary inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-lg">
                         <i class="fas fa-times"></i> Cancel
                     </button>
@@ -362,7 +436,6 @@ function previewGallery(input) {
         reader.readAsDataURL(file);
     });
 }
-// Close modal on Escape key
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
         document.getElementById('addWatchModal').classList.add('hidden');
@@ -371,14 +444,20 @@ document.addEventListener('keydown', e => {
 });
 
 function openEditWatchModal(button) {
-    document.getElementById('edit_watch_id').value = button.dataset.watchId || '';
-    document.getElementById('edit_title').value = button.dataset.title || '';
-    document.getElementById('edit_brand_slug').value = button.dataset.brand || '';
-    document.getElementById('edit_reference_number').value = button.dataset.reference || '';
-    document.getElementById('edit_list_price').value = button.dataset.price || '';
+    document.getElementById('edit_watch_id').value           = button.dataset.watchId || '';
+    document.getElementById('edit_title').value              = button.dataset.title || '';
+    document.getElementById('edit_brand_slug').value         = button.dataset.brand || '';
+    document.getElementById('edit_reference_number').value   = button.dataset.reference || '';
+    document.getElementById('edit_list_price').value         = button.dataset.price || '';
     document.getElementById('edit_year_of_production').value = button.dataset.year || '';
-    document.getElementById('edit_condition_grade').value = button.dataset.condition || 'very_good';
-    document.getElementById('edit_status').value = button.dataset.status || 'draft';
+    document.getElementById('edit_condition_grade').value    = button.dataset.condition || 'very_good';
+    document.getElementById('edit_status').value             = button.dataset.status || 'draft';
+    document.getElementById('edit_case_material').value      = button.dataset.caseMaterial || '';
+    document.getElementById('edit_dial_color').value         = button.dataset.dialColor || '';
+    document.getElementById('edit_movement').value           = button.dataset.movement || '';
+    document.getElementById('edit_bracelet').value           = button.dataset.bracelet || '';
+    document.getElementById('edit_power_reserve').value      = button.dataset.powerReserve || '';
+    document.getElementById('edit_box_papers').checked       = button.dataset.boxPapers === '1';
     document.getElementById('editWatchModal').classList.remove('hidden');
 }
 </script>
